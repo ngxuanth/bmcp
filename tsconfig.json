@@ -9,11 +9,32 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "outDir": "dist",
-    "rootDir": "src",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@repo/config/*": [
+        "./shims/config/*"
+      ],
+      "@repo/types/*": [
+        "./shims/types/*"
+      ],
+      "@repo/messaging/*": [
+        "./shims/messaging/*"
+      ],
+      "@repo/utils": [
+        "./shims/utils/index.ts"
+      ],
+      "@r2r/messaging/*": [
+        "./shims/messaging/*"
+      ]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "shims/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
