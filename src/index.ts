@@ -24,7 +24,11 @@ function setupExitWatchdog(server: Server) {
 
 const commonTools: Tool[] = [common.pressKey, common.wait];
 
-const customTools: Tool[] = [custom.getConsoleLogs, custom.screenshot];
+const customTools: Tool[] = [
+  custom.getConsoleLogs,
+  custom.screenshot,
+  custom.uploadFile,
+];
 
 const snapshotTools: Tool[] = [
   common.navigate(true),
@@ -32,6 +36,7 @@ const snapshotTools: Tool[] = [
   common.goForward(true),
   snapshot.snapshot,
   snapshot.click,
+  snapshot.drag,
   snapshot.hover,
   snapshot.type,
   snapshot.selectOption,
