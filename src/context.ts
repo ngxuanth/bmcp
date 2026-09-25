@@ -6,6 +6,8 @@ import { MessagePayload, MessageType } from "@repo/messaging/types";
 import { SocketMessageMap } from "@repo/types/messages/ws";
 
 const noConnectionMessage = `No connection to browser extension. In order to proceed, you must first connect a tab by clicking the Browser MCP extension icon in the browser toolbar and clicking the 'Connect' button.`;
+const noTabMessage = `The browser extension is connected, but no tab is attached to it (the tab may have been closed or switched). Click the Browser MCP extension icon on the tab you want to automate and click the 'Connect' button again.`;
+const staleTabMessage = `The connected tab no longer exists (it was closed, discarded or replaced by the browser). Click the Browser MCP extension icon on the tab you want to automate and click the 'Connect' button again.`;
 
 export class Context {
   private _ws: WebSocket | undefined;
@@ -43,8 +45,15 @@ export class Context {
     try {
       return await sendSocketMessage(type, payload, options);
     } catch (e) {
-      if (e instanceof Error && e.message === mcpConfig.errors.noConnectedTab) {
-        throw new Error(noConnectionMessage);
+      if (e instanceof Error) {
+        // The extension is connected here, so don't report a missing connection.
+        if (e.message === mcpConfig.errors.noConnectedTab) {
+          throw new Error(noTabMessage);
+        }
+        // Chrome's error for a tab ID that no longer exists.
+        if (e.message.includes("No tab with given id")) {
+          throw new Error(staleTabMessage);
+        }
       }
       throw e;
     }
