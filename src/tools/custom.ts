@@ -50,7 +50,7 @@ export const screenshot: Tool = {
   },
 };
 
-// Not in @repo/types yet; mirrors the extension's `browser_upload_file` schema.
+// Mirrors the extension's `browser_upload_file` schema.
 const UploadFileTool = z.object({
   name: z.literal("browser_upload_file"),
   description: z.literal(
@@ -119,8 +119,7 @@ export const uploadFile: Tool = {
   handle: async (context, params) => {
     const { selector, filePath } = UploadFileTool.shape.arguments.parse(params);
     const absPath = resolveUploadPath(filePath);
-    // Message type is not declared in SocketMessageMap, so bypass its typing.
-    await (context.sendSocketMessage as any)("browser_upload_file", {
+    await context.sendSocketMessage("browser_upload_file", {
       selector,
       filePath: absPath,
     });
