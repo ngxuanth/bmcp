@@ -1,7 +1,7 @@
 {
   "dxt_version": "0.1",
   "name": "browsermcp",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "display_name": "Browser MCP",
   "description": "Automate your Chrome browser with AI through the Browser MCP extension",
   "long_description": "This MCP server lets AI assistants control a Chrome tab: navigate, read accessibility snapshots, click, type, drag, select options, press keys, take screenshots, read console logs and attach local files to file inputs.\n\n**Note:** This requires the Browser MCP Chrome extension. Install it, open the tab you want to automate, click the extension icon and press 'Connect'.",
