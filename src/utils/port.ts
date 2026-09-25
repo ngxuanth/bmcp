@@ -12,14 +12,16 @@ export async function isPortInUse(port: number): Promise<boolean> {
   });
 }
 
+// Only target the process *listening* on the port: clients connected to it
+// (e.g. Chrome, via the extension) must not be killed.
 export function killProcessOnPort(port: number) {
   try {
     if (process.platform === "win32") {
       execSync(
-        `FOR /F "tokens=5" %a in ('netstat -ano ^| findstr :${port}') do taskkill /F /PID %a`,
+        `FOR /F "tokens=5" %a in ('netstat -ano ^| findstr LISTENING ^| findstr :${port}') do taskkill /F /PID %a`,
       );
     } else {
-      execSync(`lsof -ti:${port} | xargs -r kill -9`);
+      execSync(`lsof -ti tcp:${port} -sTCP:LISTEN | xargs -r kill -9`);
     }
   } catch (error) {
     console.error(`Failed to kill process on port ${port}:`, error);
