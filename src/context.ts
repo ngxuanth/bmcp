@@ -21,6 +21,13 @@ export class Context {
     this._ws = ws;
   }
 
+  /** Forget `ws` if it is still the current connection (e.g. after it closed). */
+  clearWs(ws: WebSocket) {
+    if (this._ws === ws) {
+      this._ws = undefined;
+    }
+  }
+
   hasWs(): boolean {
     return !!this._ws;
   }

@@ -38,6 +38,7 @@ export async function createServerWithTools(options: Options): Promise<Server> {
       context.ws.close();
     }
     context.ws = websocket;
+    websocket.on("close", () => context.clearWs(websocket));
   });
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -82,10 +83,14 @@ export async function createServerWithTools(options: Options): Promise<Server> {
     return { contents };
   });
 
+  // Keep a reference to the original: calling `server.close()` inside the
+  // override would recurse forever.
+  const closeServer = server.close.bind(server);
   server.close = async () => {
-    await server.close();
-    await wss.close();
+    await closeServer();
+    // Close the extension socket first: `wss.close` waits for clients to go.
     await context.close();
+    await new Promise<void>((resolve) => wss.close(() => resolve()));
   };
 
   return server;
