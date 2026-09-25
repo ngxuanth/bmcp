@@ -39,7 +39,7 @@ AI app ⇄ (stdio) ⇄ MCP server (this repo) ⇄ (WebSocket 127.0.0.1:9009) ⇄
      "mcpServers": {
        "browsermcp": {
          "command": "npx",
-         "args": ["--yes", "github:ngxuanth/bmcp#v0.1.4"],
+         "args": ["--yes", "github:ngxuanth/bmcp#v0.1.5"],
          "env": {
            "BMCP_UPLOAD_DIR": "/path/to/uploads"
          }
@@ -51,7 +51,7 @@ AI app ⇄ (stdio) ⇄ MCP server (this repo) ⇄ (WebSocket 127.0.0.1:9009) ⇄
    With Claude Code:
 
    ```sh
-   claude mcp add browsermcp -e BMCP_UPLOAD_DIR=/path/to/uploads -- npx --yes github:ngxuanth/bmcp#v0.1.4
+   claude mcp add browsermcp -e BMCP_UPLOAD_DIR=/path/to/uploads -- npx --yes github:ngxuanth/bmcp#v0.1.5
    ```
 
 3. Open the tab to automate, click the extension icon and press **Connect**.
