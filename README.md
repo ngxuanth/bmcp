@@ -23,9 +23,65 @@ Browser MCP is an MCP server + Chrome extension that allows you to automate your
 - 👤 Logged In: Uses your existing browser profile, keeping you logged into all your services.
 - 🥷🏼 Stealth: Avoids basic bot detection and CAPTCHAs by using your real browser fingerprint.
 
-## Contributing
+## Setup
 
-This repo contains all the core MCP code for Browser MCP, but currently cannot yet be built on its own due to dependencies on utils and types from the monorepo where it's developed.
+Browser MCP has two parts that run together:
+
+```
+AI app ⇄ (stdio) ⇄ MCP server (this repo) ⇄ (WebSocket 127.0.0.1:9009) ⇄ Chrome extension ⇄ tab
+```
+
+1. Install the Browser MCP Chrome extension.
+2. Add the MCP server to your AI app. For example, in `~/.cursor/mcp.json`:
+
+   ```json
+   {
+     "mcpServers": {
+       "browsermcp": {
+         "command": "npx",
+         "args": ["--yes", "github:ngxuanth/bmcp#v0.1.4"],
+         "env": {
+           "BMCP_UPLOAD_DIR": "/path/to/uploads"
+         }
+       }
+     }
+   }
+   ```
+
+   With Claude Code:
+
+   ```sh
+   claude mcp add browsermcp -e BMCP_UPLOAD_DIR=/path/to/uploads -- npx --yes github:ngxuanth/bmcp#v0.1.4
+   ```
+
+3. Open the tab to automate, click the extension icon and press **Connect**.
+
+Only one server can talk to the extension at a time: starting a new one stops any server already listening on port 9009.
+
+### Environment variables
+
+| Variable            | Description                                                                                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `BMCP_UPLOAD_DIR`   | Directory whose files `browser_upload_file` may attach. Uploads are disabled when unset. Hidden files are never uploaded.    |
+| `BMCP_EXTENSION_ID` | Only accept connections from this extension ID (see `chrome://extensions`). When unset, any Chrome extension can connect.    |
+
+## Tools
+
+`browser_navigate`, `browser_go_back`, `browser_go_forward`, `browser_snapshot`, `browser_click`, `browser_drag`, `browser_hover`, `browser_type`, `browser_select_option`, `browser_press_key`, `browser_wait`, `browser_get_console_logs`, `browser_screenshot`, `browser_upload_file`.
+
+## Development
+
+```sh
+npm install
+npm run build      # outputs dist/index.js
+npm run typecheck
+```
+
+To run a local build, point your MCP config at `node /path/to/bmcp/dist/index.js`.
+
+The server was extracted from a monorepo; the workspace packages it used (`@repo/*`, `@r2r/messaging`) are replaced by local copies in `shims/`, mapped in `tsconfig.json`.
+
+`npm pack` builds a tarball that can also be run with `npx --yes ./browsermcp-mcp-<version>.tgz`, and `manifest.json` packages the server for Claude Desktop with `npx @anthropic-ai/dxt pack`.
 
 ## Credits
 
